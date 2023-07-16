@@ -51,6 +51,14 @@ app.post("/cse-book-add", (req, res) => {
   );
 });
 
+app.delete("/cse-book-delete/:book_id", (req, res) => {
+  const book = req.params.book_id;
+  const sql = "DELETE FROM cse WHERE book_id = ?";
+  db_engg.query(sql, book, (err, result) => {
+    if (err) console.log(err);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
