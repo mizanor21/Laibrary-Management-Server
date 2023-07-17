@@ -51,6 +51,17 @@ app.get("/eee-books", (req, res) => {
   });
 });
 
+app.get("/english-books", (req, res) => {
+  const sql = "SELECT * FROM english";
+  db_general.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
 app.post("/cse-book-add", (req, res) => {
   const title = req.body.title;
   const auther = req.body.auther;
@@ -89,6 +100,25 @@ app.post("/eee-book-add", (req, res) => {
   );
 });
 
+app.post("/english-book-add", (req, res) => {
+  const title = req.body.title;
+  const auther = req.body.auther;
+  const edition = req.body.edition;
+  const publisher = req.body.publisher;
+  const img = req.body.img;
+  const quantity = req.body.quantity;
+
+  const sqlInsert =
+    "INSERT INTO english (title, auther, edition, publisher, img, quantity) VALUES (?,?,?,?,?,?)";
+  db_general.query(
+    sqlInsert,
+    [title, auther, edition, publisher, img, quantity],
+    (err, result) => {
+      console.log(err);
+    }
+  );
+});
+
 app.delete("/cse-book-delete/:book_id", (req, res) => {
   const book = req.params.book_id;
   const sql = "DELETE FROM cse WHERE book_id = ?";
@@ -101,6 +131,14 @@ app.delete("/eee-book-delete/:book_id", (req, res) => {
   const book = req.params.book_id;
   const sql = "DELETE FROM eee WHERE book_id = ?";
   db_engg.query(sql, book, (err, result) => {
+    if (err) console.log(err);
+  });
+});
+
+app.delete("/english-book-delete/:book_id", (req, res) => {
+  const book = req.params.book_id;
+  const sql = "DELETE FROM english WHERE book_id = ?";
+  db_general.query(sql, book, (err, result) => {
     if (err) console.log(err);
   });
 });
