@@ -17,12 +17,31 @@ const db_engg = createPool({
   connectionLimit: 50,
 });
 
+const db_general = createPool({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "general_department",
+  connectionLimit: 50,
+});
+
 app.get("/", (req, res) => {
   res.send("Library management Server running!");
 });
 
 app.get("/cse-books", (req, res) => {
   const sql = "SELECT * FROM cse";
+  db_engg.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.get("/eee-books", (req, res) => {
+  const sql = "SELECT * FROM eee";
   db_engg.query(sql, (err, data) => {
     if (err) {
       return res.json(err);
@@ -51,9 +70,36 @@ app.post("/cse-book-add", (req, res) => {
   );
 });
 
+app.post("/eee-book-add", (req, res) => {
+  const title = req.body.title;
+  const auther = req.body.auther;
+  const edition = req.body.edition;
+  const publisher = req.body.publisher;
+  const img = req.body.img;
+  const quantity = req.body.quantity;
+
+  const sqlInsert =
+    "INSERT INTO eee (title, auther, edition, publisher, img, quantity) VALUES (?,?,?,?,?,?)";
+  db_engg.query(
+    sqlInsert,
+    [title, auther, edition, publisher, img, quantity],
+    (err, result) => {
+      console.log(err);
+    }
+  );
+});
+
 app.delete("/cse-book-delete/:book_id", (req, res) => {
   const book = req.params.book_id;
   const sql = "DELETE FROM cse WHERE book_id = ?";
+  db_engg.query(sql, book, (err, result) => {
+    if (err) console.log(err);
+  });
+});
+
+app.delete("/eee-book-delete/:book_id", (req, res) => {
+  const book = req.params.book_id;
+  const sql = "DELETE FROM eee WHERE book_id = ?";
   db_engg.query(sql, book, (err, result) => {
     if (err) console.log(err);
   });
