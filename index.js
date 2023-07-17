@@ -78,6 +78,17 @@ app.post("/borrow-book-info", (req, res) => {
   );
 });
 
+app.get("/borrow-books", (req, res) => {
+  const sql = "SELECT * FROM borrowBook";
+  db_engg.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
