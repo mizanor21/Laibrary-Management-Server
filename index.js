@@ -59,6 +59,25 @@ app.delete("/cse-book-delete/:book_id", (req, res) => {
   });
 });
 
+app.post("/borrow-book-info", (req, res) => {
+  const email = req.body.email;
+  const title = req.body.title;
+  const auther = req.body.auther;
+  const edition = req.body.edition;
+  const publisher = req.body.publisher;
+  const img = req.body.img;
+
+  const sqlInsert =
+    "INSERT INTO borrowBook (email, title, auther, edition, publisher, img) VALUES (?,?,?,?,?,?)";
+  db_engg.query(
+    sqlInsert,
+    [email, title, auther, edition, publisher, img],
+    (err, result) => {
+      console.log(err);
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
