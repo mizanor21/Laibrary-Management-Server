@@ -173,6 +173,32 @@ app.get("/borrow-books", (req, res) => {
   });
 });
 
+app.get("/borrow-books-spe", (req, res) => {
+  const email = req.query.email;
+  // Execute MySQL query to get specific user data
+  db_engg.query(
+    "SELECT * FROM borrowBook WHERE email = ?",
+    [email],
+    (error, results) => {
+      if (error) {
+        console.error("Error executing MySQL query: " + error.stack);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+
+      // Return the user data
+      res.json(results);
+    }
+  );
+});
+
+app.delete("/borrow-books-delete/:borrow_id", (req, res) => {
+  const book = req.params.borrow_id;
+  const sql = "DELETE FROM borrowBook WHERE borrow_id = ?";
+  db_engg.query(sql, book, (err, result) => {
+    if (err) console.log(err);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
